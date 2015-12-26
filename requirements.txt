@@ -1,0 +1,4 @@
+aiohttp==0.19.0
+chardet==2.3.0
+rethinkdb==2.2.0.post2
+wheel==0.24.0
