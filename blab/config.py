@@ -1,0 +1,7 @@
+DEBUG = True
+APP_HOST = '0.0.0.0'
+APP_PORT = '8000'
+# db
+RETHINKDB_HOST = 'localhost'
+RETHINKDB_PORT = 28015
+DB_NAME = 'blab'
