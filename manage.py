@@ -9,9 +9,10 @@ from blab import config
 from blab import loop
 
 
-def runserver_cmd(host, port):
+def runserver(host, port):
     if not app.r.db_list().contains(config.DB_NAME).run(app.conn):
-        print("Database '{}' doesn't exist\nTry running 'initdb' command".format(config.DB_NAME))
+        print("Database '{}' doesn't exist".format(config.DB_NAME))
+        print("Try running 'initdb' command")
         return
     handler = app.make_handler()
     f = loop.create_server(handler, host, port)
@@ -29,7 +30,7 @@ def runserver_cmd(host, port):
     loop.close()
 
 
-def initdb_cmd():
+def initdb():
     try:
         app.r.db_create(config.DB_NAME).run(app.conn)
         print("Database '{}' created successfully".format(config.DB_NAME))
@@ -40,15 +41,17 @@ def initdb_cmd():
 def main():
     parser = argparse.ArgumentParser()
     subp = parser.add_subparsers(dest='cmd')
-    runserver = subp.add_parser('runserver')
-    runserver.add_argument('-H', '--host', dest='host', default=config.APP_HOST)
-    runserver.add_argument('-P', '--port', dest='port', default=config.APP_PORT, type=int)
+    runserver_cmd = subp.add_parser('runserver')
+    runserver_cmd.add_argument('-H', '--host', dest='host',
+                               default=config.APP_HOST)
+    runserver_cmd.add_argument('-P', '--port', dest='port',
+                               default=config.APP_PORT, type=int)
     subp.add_parser('initdb')
     args = parser.parse_args()
     if args.cmd == 'initdb':
-        initdb_cmd()
+        initdb()
     elif args.cmd == 'runserver':
-        if not runserver_cmd(args.host, args.port):
+        if not runserver(args.host, args.port):
             parser.exit(1)
 
 if __name__ == "__main__":
